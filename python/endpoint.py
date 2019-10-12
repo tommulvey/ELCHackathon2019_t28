@@ -18,16 +18,18 @@ container = database.get_container_client('tweets')
 app = Flask(__name__)
 @app.route('/api/cdate', methods=['GET'])
 def get_time():
-
+    s = '{'
     for item in container.query_items(
                     query='SELECT tweets.date FROM tweets where tweets.date >= "2019-10-01" and tweets.date <= "2019-11-01"',
                     enable_cross_partition_query=True):
         jtime = item['date']
         head, text, end = jtime.partition('T')
-        print(head)
         rtime = datetime.strptime(head, '%Y-%m-%d').timetuple()
         unixt = int(time.mktime(rtime))
-        return jsonify({unixt: 1})
+        s = s + str(unixt) + ':' + str(1) + ','
+    s = s[:-1]
+    s = s + '}'
+    return jsonify(s)
 
 if __name__ == '__main__':
     app.run(debug=True)
