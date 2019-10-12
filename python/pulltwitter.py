@@ -22,7 +22,7 @@ public_tweets = api.home_timeline()
 
 queue_service = QueueService(account_name='elcqueues2019', account_key='BGyZDgWXKYEQUF31pvLVfk3b9EZMhiCPS7MUjnZgGfQKZ9Lthd6BwK3ITfE27ROdRU/zZGAkZkRsBLxPRn4U5g==')
 print("nice")
-for tweet in api.search(q="blue ocean -filter:retweets", lang="en", rpp=10):
+for tweet in api.search(q="'blue ocean' -filter:retweets", lang="en", rpp=10):
     link = f"https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}"
     date = (f"{tweet.created_at}")
     like = (f"{tweet.favorite_count}")
