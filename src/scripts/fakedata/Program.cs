@@ -110,8 +110,8 @@ namespace CosmosGettingStartedTutorial
                     id = i.ToString(),
                     body = "body",
                     date = dd,
-                    likes = gen.Next(10000).ToString(),
-                    rts = gen.Next(10000).ToString(),
+                    likes = gen.Next(10000),
+                    rts = gen.Next(10000),
                     link = "www.google.com",
                     name = "fake",
                     profile = "https://vignette.wikia.nocookie.net/pixar/images/3/38/Mike1.png/revision/latest/scale-to-width-down/310?cb=20170807223616"

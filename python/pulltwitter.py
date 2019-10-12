@@ -2,6 +2,7 @@ try:
     import json
 except ImportError:
     import simplejson as json
+import base64
 
 from azure.storage.queue import QueueService
 import tweepy
@@ -20,14 +21,15 @@ api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, 
 public_tweets = api.home_timeline()
 
 queue_service = QueueService(account_name='elcqueues2019', account_key='BGyZDgWXKYEQUF31pvLVfk3b9EZMhiCPS7MUjnZgGfQKZ9Lthd6BwK3ITfE27ROdRU/zZGAkZkRsBLxPRn4U5g==')
-
-for tweet in api.search(q="blue ocean -filter:retweets", lang="en", rpp=10):
+print("nice")
+for tweet in api.search(q="'blue ocean' -filter:retweets", lang="en", rpp=10):
     link = f"https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}"
     date = (f"{tweet.created_at}")
     like = (f"{tweet.favorite_count}")
     rts = (f"{tweet.retweet_count}")
     body = (f"{tweet.text}")
     name = (f"{tweet.user.name}")
+    id = (f"{tweet.id}")
     profile = (f"{tweet.user.profile_image_url}")
     postDict = {
         'date': date,
@@ -36,11 +38,14 @@ for tweet in api.search(q="blue ocean -filter:retweets", lang="en", rpp=10):
         'body': body,
         'name': name,
         'profile': profile,
-        'link': link
+        'link': link,
+        'id': id 
     }
     app_json = json.dumps(postDict, sort_keys=True)
-    queue_service.put_message('tweets', app_json)
-    print(app_json)
+    s = str(base64.b64encode(app_json.encode('utf-8')))
+    s = s[2:-1]
+    queue_service.put_message('tweets', s)
+    print(str((f"{tweet.id}")))
     #print((f"{tweet.user.name}:{tweet.text}").encode("utf-8"))
 
 #for tweet in tweepy.Cursor(api.search,
