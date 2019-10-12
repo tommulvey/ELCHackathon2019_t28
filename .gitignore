@@ -1,0 +1,6 @@
+.sqllite
+.sqlite
+db.lock
+*.lock
+.vs
+.vs/*
