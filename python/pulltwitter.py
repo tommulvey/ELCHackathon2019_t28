@@ -2,6 +2,7 @@ try:
     import json
 except ImportError:
     import simplejson as json
+import base64
 
 from azure.storage.queue import QueueService
 import tweepy
@@ -20,7 +21,7 @@ api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, 
 public_tweets = api.home_timeline()
 
 queue_service = QueueService(account_name='elcqueues2019', account_key='BGyZDgWXKYEQUF31pvLVfk3b9EZMhiCPS7MUjnZgGfQKZ9Lthd6BwK3ITfE27ROdRU/zZGAkZkRsBLxPRn4U5g==')
-
+print("nice")
 for tweet in api.search(q="blue ocean -filter:retweets", lang="en", rpp=10):
     link = f"https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}"
     date = (f"{tweet.created_at}")
@@ -39,7 +40,7 @@ for tweet in api.search(q="blue ocean -filter:retweets", lang="en", rpp=10):
         'link': link
     }
     app_json = json.dumps(postDict, sort_keys=True)
-    queue_service.put_message('tweets', app_json)
+    queue_service.put_message('tweets', str(base64.b64encode(app_json.encode('utf-8'))))
     print(app_json)
     #print((f"{tweet.user.name}:{tweet.text}").encode("utf-8"))
 
