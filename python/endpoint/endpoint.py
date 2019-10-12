@@ -5,6 +5,7 @@ except ImportError:
 from datetime import datetime
 import time
 from flask import Flask, jsonify
+from flask import request
 import azure.cosmos.documents as documents
 import azure.cosmos.cosmos_client as cosmos_client
 import azure.cosmos.errors as errors
@@ -29,7 +30,41 @@ def get_time():
         s = s + str(unixt) + ':' + str(1) + ','
     s = s[:-1]
     s = s + '}'
-    return jsonify(s)
+    res = jsonify(s)
+    res.headers.add('Access-Control-Allow-Origin', '*')
+    return res
+
+@app.route('/api/stats', methods=['GET'])
+def stats():
+    month = str(request.args.get('months', default = "10", type = str))
+    day = str(request.args.get('days', default = "*", type = str))
+    if (day=="*" and month=="") or (month=="*" and day=="*") or (int(month) > 12 or int(month) < 1):
+        return "bad"
+    # scenario 1. all months/days need to be calculated. return
+    if (month!="*" and day=="*"):
+
+        # num posts
+        res = {}
+        for item in container.query_items(
+            query='SELECT VALUE COUNT(1) FROM tweets where tweets.date >= "2019-'+str(month)+'-01" and tweets.date < "2019-'+str(int(month)+1)+'-01"',
+            enable_cross_partition_query=True
+            ):
+            res["posts"]=str(item)
+        #likes
+        for item in container.query_items(
+            query='SELECT VALUE SUM(tweets.likes) FROM tweets where tweets.date >= "2019-'+str(month)+'-01" and tweets.date < "2019-'+str(int(month)+1)+'-01"',
+            enable_cross_partition_query=True
+            ):
+            res["likes"]=str(item)
+        #rts
+        for item in container.query_items(
+            query='SELECT VALUE SUM(tweets.rts) FROM tweets where tweets.date >= "2019-'+str(month)+'-01" and tweets.date < "2019-'+str(int(month)+1)+'-01"',
+            enable_cross_partition_query=True
+            ):
+            res["rts"]=str(item)
+        
+        return res
+
 
 if __name__ == '__main__':
     app.jinja_env.auto_reload = True
