@@ -1,0 +1,53 @@
+.container {
+  margin-top: 10vh;
+}
+
+.header{
+  margin-top: 16vh;
+}
+
+.holdbar1{
+  margin-top: 5vh;
+  margin-left: 10vw;
+}
+
+#previousSelector-a-previous {
+  margin-top: 6vh;
+  margin-bottom: 3vh;
+  margin-left: 4vw;
+}
+
+.heatcontainer{
+  padding-left: 5vw;
+  padding-top: 3vh;
+}
+
+.headertext{
+  margin-top: 5vh;
+}
+
+.cal-heatmap-container .graph-label {
+  fill: #000;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.tholder{
+  margin-top: 5vh;
+}
+
+#previousSelector-a-next {
+  margin-top: 6vh;
+  margin-bottom: 3vh;
+  margin-right: 7vw;
+}
+
+body {
+  background-image: url("ocean.jpg");
+  background-size:     cover;                      /* <------ */
+  background-repeat:   no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+svg{font-weight:bold;max-width:600px;height:auto;}

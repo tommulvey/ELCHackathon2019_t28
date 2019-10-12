@@ -1,0 +1,120 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Sea Stats</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
+  <script>
+
+    </script>
+  </head>
+
+<body>
+    <div class="row text-center">
+      <svg class="headertext mx-auto" viewbox="0 0 100 20">
+  <defs>
+    <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="5%" stop-color="#326384"/>
+      <stop offset="95%" stop-color="#123752"/>
+    </linearGradient>
+    <pattern id="wave" x="0" y="0" width="120" height="20" patternUnits="userSpaceOnUse">
+      <path id="wavePath" d="M-40 9 Q-30 7 -20 9 T0 9 T20 9 T40 9 T60 9 T80 9 T100 9 T120 9 V20 H-40z" mask="url(#mask)" fill="url(#gradient)">
+        <animateTransform
+            attributeName="transform"
+            begin="0s"
+            dur="1.5s"
+            type="translate"
+            from="0,0"
+            to="40,0"
+            repeatCount="indefinite" />
+      </path>
+    </pattern>
+  </defs>
+  <text text-anchor="middle" x="50" y="15" font-size="17" fill="url(#wave)"  fill-opacity="0.6">Sea Stats</text>
+  <text text-anchor="middle" x="50" y="15" font-size="17" fill="url(#gradient)" fill-opacity="0.1">Sea Stats</text>
+</svg>
+    </div>
+  <div class="row">
+    <div class="col-sm-4 text-center">
+      <div class="holdbar1">
+      <span class="placeholder mx-auto" id ="onClick-placeholder">
+         <a class="twitter-timeline" data-width="300" data-height="1000" href="https://twitter.com/AyvazyanArkadiy/timelines/1183049613751787520?ref_src=twsrc%5Etfw%22%3ECollection - Curated tweets by AyvazyanArkadiy"></a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      </span>
+      </div>
+    </div>
+    <div class="col-sm-4">
+  <div id="domain-a">
+    <div id="previousSelector-a" class="heatcontainer"></div>
+    <script type="text/javascript">
+	     var cal = new CalHeatMap();
+	      cal.init({
+          itemName: ["tweet", "tweets"],
+          itemSelector: "#previousSelector-a",
+	        domain: "month",
+	        subDomain: "x_day",
+          start: new Date(2019, 5, 1),
+	        cellSize: 35,
+          cellPadding: 5,
+	        range: 1,
+          legend: [4, 8, 12, 16],
+          legendColors: ["#efefef", "steelblue"],
+	        displayLegend: false,
+          previousSelector: "#previousSelector-a-previous",
+	        nextSelector: "#domain-a-next",
+
+          label: {
+		          position: "top"
+           },
+
+           data: "http://40.71.91.138/api/cdate"
+         });
+
+        //tweets live feed
+      </script>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 text-center">
+        <button type="button" class="btn btn-light" id="previousSelector-a-previous">Prev</button>
+        </div>
+      <div class="col-sm-6 text-center">
+      <button type="button" class="btn btn-light" id="previousSelector-a-next">Next</button>
+      </div>
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <div class="tholder">
+    <a class="twitter-timeline" data-width="300" data-height="1000" href="https://twitter.com/AyvazyanArkadiy/timelines/1183083619620925440?ref_src=twsrc%5Etfw%22%3ESave the Ocean - Curated tweets by AyvazyanArkadiy"></a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+    </div>
+    </div>
+
+    <script type="text/javascript">
+      $("#previousSelector-a-previous").on("click", function(e) {
+          e.preventDefault();
+          if (!cal.previous()) {
+              alert("No more domains to load");
+          }
+      });
+
+      $("#previousSelector-a-next").on("click", function(e) {
+          e.preventDefault();
+          if (!cal.next()) {
+              alert("No more domains to load");
+          }
+      });
+
+      </script>
+
+
+  </body>
+</html>
