@@ -29,7 +29,7 @@ def get_time():
         s = s + str(unixt) + ':' + str(1) + ','
     s = s[:-1]
     s = s + '}'
-    return jsonify(s)
+    return json.dumps(s)
 
 if __name__ == '__main__':
     app.run(debug=True)
