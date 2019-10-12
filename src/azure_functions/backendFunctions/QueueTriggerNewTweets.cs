@@ -14,6 +14,7 @@ using Microsoft.Rest;
 using System.Text.RegularExpressions;
 using Microsoft.Azure.Cosmos;
 using System.Net;
+using System.Text;
 
 namespace backendFunctions
 {
@@ -23,7 +24,11 @@ namespace backendFunctions
         {
             try
             {
-                var desrialized = JsonConvert.DeserializeObject<Dictionary<string, string>>(qMsg);
+                byte[] data = Convert.FromBase64String(qMsg);
+                string decodedString = Encoding.UTF8.GetString(data);
+                //decodedString = decodedString.Replace("\"", "'");
+
+                var desrialized = JsonConvert.DeserializeObject<Dictionary<string, string>>(decodedString);
                 this.id = desrialized["id"];
                 this.date = DateTime.Parse(desrialized["date"]);
                 this.body = desrialized["body"];
@@ -36,7 +41,7 @@ namespace backendFunctions
             }
             catch (Exception e)
             {
-                throw e;
+                //throw new Exception($"{e}, {this.id}, {this.date.ToString()}, {this.body}, {this.link} ");
             }
         }
         public string id { get; set; }
@@ -103,13 +108,14 @@ namespace backendFunctions
         [FunctionName("QueueTriggerNewTweets")]
         public async void Run([QueueTrigger("tweets", Connection = "QueueStorage")]string myQueueItem, ILogger log)
         {
-            log.LogInformation($"C# Queue trigger function processed: {myQueueItem}");
+            log.LogInformation($"C# Queue trigger function processed for: {myQueueItem}");
             // convert to object we want
             dbFormat item = new dbFormat(myQueueItem);
+
             // log.LogInformation(item.name + "   " + item.profile);
-            
+
             // test the body to see if its naughty or nice ;)
-            if (this.GetSentiment(key_var,endpoint_var,item.body))
+            if (item.body!=null && this.GetSentiment(key_var, endpoint_var, item.body, log))
             {
                 log.LogInformation("good sentiment.");
                 // add to cosmos!
@@ -130,7 +136,7 @@ namespace backendFunctions
             }
         }
 
-        public bool GetSentiment(string subscriptionKey, string endpoint, string tweet_body)
+        public bool GetSentiment(string subscriptionKey, string endpoint, string tweet_body, ILogger log)
         {
             try
             {
@@ -151,7 +157,7 @@ namespace backendFunctions
 
                 // change body to get rid of unicode shit
                 var s = Regex.Replace(tweet_body, @"[^\u0020-\u007E]", " ");
-
+                log.LogInformation(s);
                 var result = client.Sentiment(s, "en");
                 if (result.Score >= .5 )
                     return true;
