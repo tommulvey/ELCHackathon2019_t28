@@ -46,7 +46,6 @@ class StdOutListener(StreamListener):
             s = s[2:-1]
             queue_service.put_message('tweets', s)
             print(str(s))
-            
 
         return True
 
