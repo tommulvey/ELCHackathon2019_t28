@@ -29,6 +29,7 @@ for tweet in api.search(q="blue ocean -filter:retweets", lang="en", rpp=10):
     rts = (f"{tweet.retweet_count}")
     body = (f"{tweet.text}")
     name = (f"{tweet.user.name}")
+    id = (f"{tweet.id}")
     profile = (f"{tweet.user.profile_image_url}")
     postDict = {
         'date': date,
@@ -37,11 +38,14 @@ for tweet in api.search(q="blue ocean -filter:retweets", lang="en", rpp=10):
         'body': body,
         'name': name,
         'profile': profile,
-        'link': link
+        'link': link,
+        'id': id 
     }
     app_json = json.dumps(postDict, sort_keys=True)
-    queue_service.put_message('tweets', str(base64.b64encode(app_json.encode('utf-8'))))
-    print(app_json)
+    s = str(base64.b64encode(app_json.encode('utf-8')))
+    s = s[2:-1]
+    queue_service.put_message('tweets', s)
+    print(str((f"{tweet.id}")))
     #print((f"{tweet.user.name}:{tweet.text}").encode("utf-8"))
 
 #for tweet in tweepy.Cursor(api.search,
